@@ -1,0 +1,49 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Detail";
+    //Product product = Model;
+}
+
+<div class="container">
+    <div class="row mb-5 mt-5">
+        @*All small images*@
+        @{
+            var images = Model.Images.FindAll(x => x.IsMain == false);
+            if(images.Count != 0)
+            {
+                <div class="col-1 d-flex flex-column justify-content-start align-item-center">
+                @foreach (var item in images)
+                {
+                    <div class="mb-2" style="border: 1px solid black; cursor:pointer;">
+                    <img src="~/img/@item.Name" class="img-fluid" ><img/>
+                    </div>
+                }   
+                </div>
+            }
+        }
+        @*One Big images*@
+        <div class="col-5">
+            <div  style="border: 1px solid black; cursor:pointer;">
+                 <img src="~/img/@Model.Images.Find(x=>x.IsMain == true)?.Name" class="img-fluid"><img/>
+            </div>
+        </div>
+        @*Product Details*@
+       <div class="col-6 d-flex flex-column justify-content-start align-item-center" style="color:whitesmoke;">
+                    <h4 style="color:red; margin-bottom:20px;">@Model.Name</h4>
+                    <h6>Category: @Model.Category.Name</h6>
+                    <h6>Dimension: @Model.Dimension</h6>
+                    <h6>Weight: @Model.Weight</h6>
+                    <h6>SKU: @Model.SKUCode</h6>
+                     @{
+                                if(Model.CampaignId == null)
+                                {
+                                    <h6>Price: @Model.Price$</h6>
+                                }
+                                else
+                                {
+                                    <h6>Price: <span class="text-white-50" style="text-decoration:line-through">@Model.Price$</span> - <span>@Math.Round(Model.Price - Model.Price*Model.Campaign.Discount/100,2)$<span style="color:navajowhite; font-size:14px;"> (@Model.Campaign.Name campaign - @Model.Campaign.Discount%)</span></span></h6>
+                                }
+                      }
+        </div>
+    </div>
+</div>

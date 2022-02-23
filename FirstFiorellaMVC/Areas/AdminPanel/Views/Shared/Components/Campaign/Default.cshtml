@@ -1,0 +1,14 @@
+﻿@model List<Campaign>
+
+@foreach (var item in Model)
+{
+    if (item.Id == ViewBag.SelectedCampaign)
+    {
+        <option value="@item.Id" selected>@item.Name</option>
+    }
+    else
+    {
+        <option value="@item.Id">@item.Name</option>
+    }
+}
+

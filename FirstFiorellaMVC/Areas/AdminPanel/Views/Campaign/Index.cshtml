@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "Campaign";
+    List<Campaign> campaignList = Model;
+    var maxPageCounts = Math.Ceiling((decimal)ViewBag.CampaignCounts / 4);
+    var currentPage = ViewBag.CurrentPage;
+}
+
+<div class="container">
+    <div class="row" style="min-height:350px;">
+        <div class="text-right pt-3">
+            <a asp-controller="Campaign" asp-action="Create" class="btn btn-danger btn-icon-text"><i class="ti-upload btn-icon-prepend"></i>Add Campaign</a>
+        </div>
+        <div class="table-responsive pt-3">
+            <table class="table table-bordered" style="background-color:#f4f5f7">
+                <thead>
+                    <tr class="table-primary text-center">
+                        @*<th style="background-color: #f4f5f7; border:1px solid #007bff;">#</th>*@
+                        <th>Campaign</th>
+                        <th>Discount</th>
+                        <th class="operation-row">Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in campaignList)
+                    {
+                        <tr class="table-info text-center">
+                            @*<td style="width:50px; background-color: #f4f5f7;border:1px solid #007bff;">@item.Id</td>*@
+                            <td><a style="text-decoration:none">@item.Name</a></td>
+                            <td><a style="text-decoration:none">@item.Discount%</a></td>
+                            <td class="operation-row">
+                                <a class="btn btn-success btn-rounded btn-fw" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                <a class="btn btn-danger btn-rounded btn-fw" id="delete-campaign-item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" style="background-color: white;">
+                    @{
+                        if (currentPage > 1)
+                        {
+                            <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage-1)">Previous</a>
+                        }
+                        else
+                        {
+                            <a class="page-link" asp-action="Index" style="pointer-events:none">Previous</a>
+                        }
+                    }
+                </li>
+                @{
+                    for (var i = 1; i <= maxPageCounts; i++)
+                    {
+                        <li class="page-@i" style="background-color:#e9ecef;"><a class="page-link" asp-action="Index" asp-route-page="@i" style="@((currentPage == i)? "background-color:blue; color:white; pointer-events:none;" : "")">@i</a></li>
+                    }
+                }
+                <li class="page-item" style="background-color: white;">
+                    @{
+                        if (currentPage < maxPageCounts)
+                        {
+                            <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)">Next</a>
+                        }
+                        else
+                        {
+                            <a class="page-link" style="pointer-events:none">Next</a>
+                        }
+                    }
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<style>
+     th {
+        background-color: #f4f5f7 !important;
+        border: 0px solid #007bff !important;
+        vertical-align: middle !important;
+        padding: 15px !important;
+    }
+
+    td {
+        padding: 0 !important;
+        background-color: #f4f5f7 !important;
+        border: 0px solid #007bff !important;
+        vertical-align: middle !important;
+        padding: 5px !important;
+    }
+    .operation-row{
+       width:80px !important;
+    }
+</style>
+
+@section Scripts
+{
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".btn-rounded#delete-campaign-item").click(function (e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let link = $(this).attr("href")
+                    fetch(link).then(response => response.json()).then(data => {
+                        if (data.status == 200) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                              setTimeout(() =>
+                                { location.reload(true) }, 2000);
+                        }
+                        else {
+                            Swal.fire(
+                                'Error!',
+                                'Your file not Found.',
+                                'Failed'
+                            )
+                        }
+                    })
+                }
+            })
+        })
+    })
+</script>
+}
+
+

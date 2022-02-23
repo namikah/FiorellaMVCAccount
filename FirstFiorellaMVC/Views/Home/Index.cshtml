@@ -1,0 +1,260 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    HomeViewModel homeViewModel = Model;
+    List<SliderImage> sliderImages = homeViewModel.SliderImages;
+    Slider slider = homeViewModel.Slider;
+    var aboutImage = homeViewModel.AboutImage;
+    var aboutContext = homeViewModel.AboutContext;
+    var aboutUnstyledLists = homeViewModel.AboutUnstyledLists;
+    var experts = homeViewModel.Experts;
+    var expertContext = homeViewModel.ExpertContext;
+    var subcribe = homeViewModel.Subcribe;
+    var blogs = homeViewModel.Blogs;
+    var blogContext = homeViewModel.BlogContext;
+    var authors = homeViewModel.Authors;
+    var instagrams = homeViewModel.Instagrams;
+ 
+}
+
+
+<!-- SLIDER START -->
+
+<section id="slider">
+    <div class="owl-carousel slider">
+        @foreach (var item in sliderImages)
+       {
+        <div> <img src="~/img/@item.Name" alt="" class="img-fluid" style="max-height:100vh;"> </div>
+       }
+    </div>
+    <div class="container context pl-lg-5 ml-lg-3">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="text">
+                    @Html.Raw(slider.Title)
+                    <p class="text-black-50 d-none d-sm-block">@slider.Subtitle</p>
+                </div>
+                <div class="img">
+                    <img src="~/img/@slider.SignatureImage" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDER END -->
+
+<!-- PRODUCTS START -->
+
+<section id="products">
+    <div class="container">
+        <div class="row pt-5">
+            <div class="col-12 d-flex justify-content-between">
+                <ul class="category-mobile d-md-none list-unstyled">
+                    <li>
+                        <a href="" class="categories mr-2">Categories</a>
+                        <i class="fas fa-caret-down"></i>
+                        <ul class="category list-unstyled" style="display: none;">
+                            <li><a href="" data-id="all">All</a></li>
+                            @foreach (var item in homeViewModel.Categories)
+                           {
+                                <li><a href="" data-id="@item.Name.ToLower()">@item.Name</a></li>
+                           }
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="category d-none d-md-flex list-unstyled">
+                    <li><a href="" data-id="all">All</a></li>
+                    @foreach (var item in homeViewModel.Categories)
+                    {
+                        <li><a href="" data-id="@item.Name.ToLower()">@item.Name</a></li>
+                    }
+                </ul>
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="" class="mr-2">Filter</a>
+                        <i class="fas fa-caret-down"></i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            @await Component.InvokeAsync("Product", 8)
+        </div>
+    </div>
+</section>
+
+<!-- PRODUCTS END -->
+
+<!-- ABOUT START -->
+
+<section id="about">
+    <div class="container py-5">
+        <div class="row py-5">
+            <div class="col-lg-6">
+                <div class="img">
+                    <img src="~/img/@aboutImage.Name" class="img-fluid" alt="@aboutImage.Name">
+                    <div
+                        class="player position-absolute rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="fas fa-play fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-text mt-5 mt-lg-0 px-lg-5">
+                   @Html.Raw(aboutContext.Title)
+                    <p class="py-3">@aboutContext.SubTitle</p>
+                    <ul class="list-unstyled">
+                       @foreach (var item in aboutUnstyledLists)
+                      {
+                           <li class="mt-3"><img src="~/img/@item.Image" class="mr-2" alt="@item.Image">@item.Name</li class="mt-3">
+                      }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT END -->
+
+<!-- EXPERTS START -->
+
+<section id="experts">
+    <div class="container">
+        <div class="row py-5">
+            <div class="offset-lg-3 col-lg-6">
+                <div class="section-title">
+                    <h1>@expertContext.Title</h1>
+                    <p class="text-black-50">@expertContext.SubTitle</p>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-5">
+           @foreach (var item in experts.Take(4))
+          {
+               <div class="col-md-6 col-lg-3">
+                <div class="item text-center">
+                    <div class="img">
+                        <img src="~/img/@item.Image" class="img-fluid rounded-circle" alt="">
+                    </div>
+                    <div class="text mt-3">
+                        <h6>@item.Name</h6>
+                        <p class="text-black-50">@item.Position</p>
+                    </div>
+                </div>
+            </div>
+          }
+            <div class="col-lg-3"></div>
+            <div class="col-lg-3"></div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+</section>
+
+<!-- EXPERTS END -->
+
+<!-- SUBSCRIBE START -->
+
+<section id="subscribe" style="background: url(../img/@subcribe.Image); background-attachment: fixed;">
+    <div class="container py-5">
+        <div class="row py-5">
+            <div class="col-12">
+                <div class="content text-center py-5">
+                    <h3>@subcribe.Title</h3>
+                    <div class="form-group d-flex justify-content-center flex-wrap mt-5">
+                        <input type="email" placeholder="Email Address" class="form-control-lg rounded-0">
+                        <button class="btn btn-danger btn-lg rounded-0 px-5 mt-3 mt-sm-0">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUBSCRIBE END -->
+
+<!-- BLOG START -->
+
+<section id="blog">
+    <div class="container">
+        <div class="row py-5">
+            <div class="offset-lg-3 col-lg-6">
+                <div class="section-title">
+                    <h1>@blogContext.Title</h1>
+                    <p class="text-black-50">@blogContext.SubTitle</p>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-5">
+           @foreach (var item in blogs.Take(3))
+           {
+                <div class="col-md-6 col-lg-4">
+                <div class="item">
+                    <div class="img position-relative">
+                        <img src="~/img/@item.Image" class="img-fluid" alt="">
+                        <div class="date rounded bg-light position-absolute py-1 px-2">
+                            <span>@item.Datetime.ToShortDateString()</span>
+                        </div>
+                    </div>
+                    <div class="text mt-3 text-center px-5">
+                        <h5>@item.Name</h5>
+                        <p class="text-black-50">@item.Context</p>
+                    </div>
+                </div>
+            </div>
+           }
+        </div>
+    </div>
+</section>
+
+<!-- BLOG END -->
+
+<!-- SAY START -->
+
+<section id="say">
+    <div class="container">
+        <div class="row py-5 justify-content-center">
+            <div class="col-md-8 col-xl-6">
+                <div class="owl-carousel say">
+                  @foreach (var item in authors)
+                 {
+                       <div>
+                        <div class="item text-center">
+                            <div class="img d-flex justify-content-center">
+                                <img src="~/img/@item.Image" alt="">
+                            </div>
+                            <div class="text text-muted pt-3 pb-5">
+                                <i>@item.Description</i>
+                            </div>
+                            <div class="author">
+                                <h6>@item.Name</h6>
+                                <p class="text-black-50">@item.Position</p>
+                            </div>
+                        </div>
+                    </div>
+                 }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SAY END -->
+
+<!-- INSTAGRAM START -->
+
+<section id="instagram">
+    <div class="owl-carousel instagram">
+     @foreach (var item in instagrams)
+    {
+           <div><img src="~/img/@item.Image" class="img-fluid" alt=""></div>
+    }
+    </div>
+    <div class="hastag bg-light text-muted py-2 px-3">
+        #FIORELLO
+    </div>
+</section>
+
+<!-- INSTAGRAM END -->
+

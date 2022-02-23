@@ -1,0 +1,15 @@
+﻿@model List<Product>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<section id="products">
+    <div class="container">
+            <input type="hidden" value="@ViewBag.ProductsCount" id="productsCount"/>
+        <div class="row" id="productRow">
+                @await Component.InvokeAsync("Product")
+                @*<partial name="_ProductPartial"/>*@
+                @*@Html.Partial("_ProductPartial")*@
+        </div>
+    </div>
+</section>

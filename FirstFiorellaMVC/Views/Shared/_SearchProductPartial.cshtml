@@ -1,0 +1,11 @@
+﻿@model             List<FirstFiorellaMVC.Models.Product>
+
+@foreach(var item in Model)
+{
+    <li>
+            <a  class="row" asp-controller="Product" asp-action="Detail" asp-route-id="@item.Id">
+                <div class="col-4"><img class="img-fluid" src="~/img/@item.Images.Find(x=>x.ProductId == item.Id).Name"><img/></div>
+                <div class="col-8">@item.Name</div>
+            </a>
+    </li>
+}

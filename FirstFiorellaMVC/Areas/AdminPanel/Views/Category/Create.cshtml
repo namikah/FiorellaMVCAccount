@@ -1,0 +1,29 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Add Category</h4>
+                    <p class="card-description">Please fill below</p>
+                    <form class="forms-sample" method="post"> @*!!!*@
+                        <div class="form-group">
+                            <input class="form-control" id="exampleInputUsername1" placeholder="name" asp-for="Name">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary me-2">Submit</button>
+                        <a class="btn btn-light" asp-action="Index">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <partial name="_ValidationPartial" />
+}

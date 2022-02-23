@@ -1,0 +1,45 @@
+﻿ @{
+    List<BasketViewModel> baskets = Model;
+    double total = 0;
+    foreach (var item in baskets)
+    {
+        total += item.Price * item.Count;
+    }
+}
+
+@foreach (var item in baskets)
+{
+    <tr>
+        <th scope="col"><a asp-controller="product" asp-action="detail" asp-route-id="@item.Id"><img class="img-fluid" style="max-height:70px;" src="~/img/@item.Image"><img /></a></th>
+        <th scope="col"><a asp-controller="product" asp-action="detail" asp-route-id="@item.Id">@item.Name</a></th>
+        <th scope="col">@item.Price</th>
+        <th scope="col">@item.Count</th>
+        <th scope="col">@item.Weight</th>
+        <th scope="col">$@(item.Price*item.Count)</th>
+        <th class="row">
+            @{//for decrement button disabled when count = 1
+                if (item.Count <= 1)
+                {
+                    <div style="border:1px solid gray; pointer-events:none; color:gray;font-size:26px;" class="col-3 text-center" id="decrement-basket-item" data-id="@item.Id">-</div>
+                }
+                else
+                {
+                    <div style="border:1px solid #f34f3f; cursor:pointer; color:#f34f3f;font-size:26px;" class="col-3 text-center" id="decrement-basket-item" data-id="@item.Id">-</div>
+                }
+
+            }
+            <div style="border:1px solid green; cursor:pointer; color:green; font-size:26px;" class="col-3 ml-1 text-center" id="increment-basket-item" data-id="@item.Id">+</div>
+        </th>
+        <th><span style="cursor:pointer; color:red; font-size:20px;" class="text-center" id="remove-basket-item" data-id="@item.Id">x</span></th>
+    </tr>
+}
+<tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><strong>TOTAL:</strong></td>
+    <td><strong id="basket-total-price-bottom">$@total</strong></td>
+    <td></td>
+    <td></td>
+</tr>

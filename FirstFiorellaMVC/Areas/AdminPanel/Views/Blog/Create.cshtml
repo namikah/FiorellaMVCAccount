@@ -1,0 +1,56 @@
+﻿@model Blog
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Add Blog</h4>
+                    <p class="card-description">Please fill below</p>
+                    <form class="forms-sample" method="post" enctype="multipart/form-data"> @*!!!*@
+                        <div class="form-group">
+                            <input class="form-control" placeholder="name" asp-for="Name">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                         <div class="form-group">
+                            <input class="form-control" placeholder="image" asp-for="Photo" accept="image/*">
+                            <span asp-validation-for="Photo" class="text-danger"></span>
+                        </div>
+                         <div class="form-group">
+                            <input class="form-control" placeholder="context" asp-for="Context">
+                            <span asp-validation-for="Context" class="text-danger"></span>
+                        </div>
+                           <div class="form-group">
+                            <textarea class="form-control" id="create-description-ck-editor" placeholder="description" asp-for="Description"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                          <div class="form-group">
+                            <input class="form-control" placeholder="date" asp-for="Datetime">
+                            <span asp-validation-for="Datetime" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary me-2">Submit</button>
+                        <a class="btn btn-light" asp-action="Index">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    
+    <partial name="_CKEditorPartial" />
+
+    <partial name="_ValidationPartial" />
+
+    <script>
+    ClassicEditor
+        .create( document.querySelector( '#create-description-ck-editor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>
+
+}

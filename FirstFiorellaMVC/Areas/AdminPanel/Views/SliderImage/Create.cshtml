@@ -1,0 +1,40 @@
+﻿@model SliderImage
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Add Slider Images</h4>
+                    <p class="card-description">Please fill below</p>
+                    <form class="forms-sample" method="post" enctype="multipart/form-data"> @*!!!*@
+                        <div class="form-group">
+                            <input class="form-control" placeholder="image" asp-for="Photos">
+                            <span asp-validation-for="Photos" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary me-2">Submit</button>
+                        <a class="btn btn-light" asp-action="Index">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    
+    <partial name="_CKEditorPartial" />
+
+    <partial name="_ValidationPartial" />
+
+    <script>
+    ClassicEditor
+        .create( document.querySelector( '#create-description-ck-editor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>
+
+}

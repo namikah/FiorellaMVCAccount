@@ -1,0 +1,35 @@
+﻿@{
+    List<Product> products = Model;
+}
+
+@foreach (var item in products)
+           {
+               <div class="col-sm-6 col-md-4 col-lg-3 mt-3">
+                <div class="product-item text-center" data-id="@item.Category.Name.ToLower()">
+                    <div class="img">
+                        <a asp-controller="product" asp-action="detail" asp-route-id="@item.Id">
+                            <img src="~/img/@item.Images.Find(p=>p.ProductId == item.Id && p.IsMain == true)?.Name" class="img-fluid" alt="">
+                        </a>
+                    </div>
+                    <div class="title mt-3">
+                        <h6>@item.Name</h6>
+                    </div>
+                    <div class="price">
+                            <a id="add-to-cart" data-id="@item.Id" @*asp-controller="home" asp-action="AddBasket" asp-route-id="@item.Id"*@>
+                            <span class="text-black-50">Add to cart</span>
+                            </a>
+                            @{
+                                if(item.CampaignId == null)
+                                {
+                                    <span class="text-black-50">@item.Price$</span>
+                                }
+                                else
+                                {
+                                    <span class="text-black-50"><a>@Math.Round(item.Price - item.Price*item.Campaign.Discount/100,2)$</a> - <a style="text-decoration:line-through">@item.Price$</a></span>
+                                }
+                            }
+                    </div>
+                </div>
+            </div>
+            }
+           

@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Detail";
+    Blog blog = Model;
+}
+
+<div class="col-md-12 grid-margin stretch-card container">
+    <div class="card mt-3">
+        <div class="card-body row justify-content-center">
+            <div class="col-6"><img class="img-fluid" src="~/img/@blog.Image"><img /></div>
+            <div class="col-6" style="padding:5px 50px 0px 0px">
+                <h2 class="card-description text-danger">@blog.Name</h2>
+                <h6 class="text-lowercase">@Html.Raw(blog.Context)</h6>
+                <h4 class="card-description text-danger mt-5">Description</h4>
+                <p class="text-lowercase">@Html.Raw(blog.Description)</p>
+                <h6 class="text-lowercase">Date: @blog.Datetime.ToShortDateString()</h6>
+            </div>
+        </div>
+    </div>
+</div>
+

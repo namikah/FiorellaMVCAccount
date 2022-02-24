@@ -134,10 +134,10 @@ namespace FirstFiorellaMVC.Controllers
                 if (ModelState.IsValid)
                 {
                     var senderEmail = new MailAddress("heydarovnamiq@gmail.com", "Namik Heydarov");
-                    var receiverEmail = new MailAddress("namikah@code.edu.az", "Receiver");
+                    var receiverEmail = new MailAddress(receiver, "Receiver");
                     var password = "Nhl99nhl";
-                    var sub = "Test Message";
-                    var body = "Bu bir test message-dir";
+                    var sub = subject;
+                    var body = message;
                     var smtp = new SmtpClient
                     {
                         Host = "smtp.gmail.com",
@@ -147,6 +147,7 @@ namespace FirstFiorellaMVC.Controllers
                         UseDefaultCredentials = false,
                         Credentials = new NetworkCredential(senderEmail.Address, password)
                     };
+
                     using (var mess = new MailMessage(senderEmail, receiverEmail)
                     {
                         Subject = sub,
@@ -158,9 +159,9 @@ namespace FirstFiorellaMVC.Controllers
                     return View();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ViewBag.Error = "Some Error";
+                ViewBag.Error = ex.Message;
             }
             return View();
         }

@@ -77,7 +77,7 @@ namespace FirstFiorellaMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Error");
+                ModelState.AddModelError("", "Incorrect");
                 return View(loginViewModel);
             }
 
@@ -103,6 +103,33 @@ namespace FirstFiorellaMVC.Controllers
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetViewModel resetViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("Username", "Username invalid");
+                return View();
+            }
+
+            var isUsername =await _userManager.FindByNameAsync(resetViewModel.Username);
+            if(isUsername == null)
+            {
+                ModelState.AddModelError("Username", "Username not found");
+                return View();
+            }
+
+            ViewBag.ConfirmationMessageSend = "true";
+
+            return View();
         }
 
         public ActionResult SendEmail()

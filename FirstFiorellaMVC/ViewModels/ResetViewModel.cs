@@ -2,12 +2,9 @@
 
 namespace FirstFiorellaMVC.ViewModels
 {
-    public class LoginViewModel
+    public class ResetViewModel
     {
         [Required]
         public string Username { get; set; }
-
-        [Required, DataType(DataType.Password)]
-        public string Password { get; set; }
     }
 }

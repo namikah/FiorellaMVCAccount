@@ -67,7 +67,8 @@ namespace FirstFiorellaMVC
 
             app.UseRouting();
             app.UseStaticFiles();
-            app.UseSession();
+            //app.UseSession();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

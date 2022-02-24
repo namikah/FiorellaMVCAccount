@@ -34,7 +34,7 @@ namespace FirstFiorellaMVC.Controllers
             }
 
             var isExistUser = await _userManager.FindByNameAsync(registerViewModel.Username);
-            if(isExistUser == null)
+            if (isExistUser != null)
             {
                 ModelState.AddModelError("Username", "Allready exist username");
                 return View(registerViewModel);
@@ -47,7 +47,7 @@ namespace FirstFiorellaMVC.Controllers
                 Email = registerViewModel.Email,
             };
 
-            var result =await _userManager.CreateAsync(user, registerViewModel.Password);
+            var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 
             if (!result.Succeeded)
             {
@@ -60,13 +60,55 @@ namespace FirstFiorellaMVC.Controllers
 
             await _signInManager.SignInAsync(user, false);
 
-            //return RedirectToAction("Index", "Home");
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Error");
+                return View(loginViewModel);
+            }
+
+            var isExistUser = await _userManager.FindByNameAsync(loginViewModel.Username);
+            if (isExistUser == null)
+            {
+                ModelState.AddModelError("Username", "Not Found");
+                return View(loginViewModel);
+            }
+
+            var user = new User()
+            {
+                UserName = loginViewModel.Username,
+            };
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginViewModel.Password, true);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("Password", "Incorrect Password");
+                return View(loginViewModel);
+            }
+
+            //var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginViewModel.Password);
+
+            //if (!isPasswordValid)
+            //{
+            //    ModelState.AddModelError("Password", "Incorrect Password");
+            //    return View(loginViewModel);
+            //}
+
+            await _signInManager.SignInAsync(user, false);
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

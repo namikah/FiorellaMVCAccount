@@ -149,7 +149,7 @@ namespace FirstFiorellaMVC.Controllers
                 return BadRequest();
             }
 
-            var isToken = await _userManager.VerifyUserTokenAsync(isUser, TokenOptions.DefaultEmailProvider, "What is Want", token);
+            var isToken = await _userManager.VerifyUserTokenAsync(isUser, TokenOptions.DefaultEmailProvider, "Confirmation", token);
             if (!isToken)
             {
                 return BadRequest();

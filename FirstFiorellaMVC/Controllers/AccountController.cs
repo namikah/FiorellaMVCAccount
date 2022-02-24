@@ -143,18 +143,17 @@ namespace FirstFiorellaMVC.Controllers
 
         public async Task<IActionResult> ChangePassword(string token, string username)
         {
-            var isUser =await _userManager.FindByNameAsync(username);
-            if(isUser == null)
-            {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(username))
                 return BadRequest();
-            }
+
+            var isUser = await _userManager.FindByNameAsync(username);
+            if (isUser == null)
+                return BadRequest();
 
             var isToken = await _userManager.VerifyUserTokenAsync(isUser, TokenOptions.DefaultEmailProvider, "Confirmation", token);
             if (!isToken)
-            {
-                return BadRequest();
-            }
-            
+                return Content("token - " + token);
+
             return View();
         }
 

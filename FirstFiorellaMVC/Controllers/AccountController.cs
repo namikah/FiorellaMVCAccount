@@ -84,21 +84,16 @@ namespace FirstFiorellaMVC.Controllers
             var isExistUser = await _userManager.FindByNameAsync(loginViewModel.Username);
             if (isExistUser == null)
             {
-                ModelState.AddModelError("Username", "Not Found");
+                ModelState.AddModelError("", "Not Found");
                 return View(loginViewModel);
             }
 
-            var user = new User()
+            var result = await _signInManager.PasswordSignInAsync(isExistUser, loginViewModel.Password, false, false);
+            if (!result.Succeeded)
             {
-                UserName = loginViewModel.Username,
-            };
-
-            //var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
-            //if (!result.Succeeded)
-            //{
-            //    ModelState.AddModelError("Password", "Incorrect Password");
-            //    return View(loginViewModel);
-            //}
+                ModelState.AddModelError("Password", "Incorrect Password");
+                return View(loginViewModel);
+            }
 
             //var result = await _signInManager.CheckPasswordSignInAsync(user, loginViewModel.Password, false);
             //if (!result.Succeeded)
@@ -115,8 +110,7 @@ namespace FirstFiorellaMVC.Controllers
             //    return View(loginViewModel);
             //}
 
-
-            await _signInManager.SignInAsync(user, false);
+            //await _signInManager.SignInAsync(user, false);
 
             return RedirectToAction("Index", "Home");
         }

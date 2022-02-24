@@ -1,0 +1,39 @@
+[
+  {
+    "FullName": "Admin",
+    "Id": "7db7da02-9ba5-4f32-93f1-96a6e135e2a7",
+    "UserName": "Admin",
+    "NormalizedUserName": null,
+    "Email": "admin@admin",
+    "NormalizedEmail": null,
+    "EmailConfirmed": false,
+    "PasswordHash": null,
+    "SecurityStamp": "41deb2bd-9f8e-4a17-aa82-5f2e553370d0",
+    "ConcurrencyStamp": "22e4e4f8-982c-4cc7-bc90-a20fc8a138ab",
+    "PhoneNumber": null,
+    "PhoneNumberConfirmed": false,
+    "TwoFactorEnabled": false,
+    "LockoutEnd": null,
+    "LockoutEnabled": false,
+    "AccessFailedCount": 0
+  },
+  {
+    "FullName": "Admin",
+    "Id": "7db7da02-9ba5-4f32-93f1-96a6e135e2a7",
+    "UserName": "Admin",
+    "NormalizedUserName": null,
+    "Email": "admin@admin",
+    "NormalizedEmail": null,
+    "EmailConfirmed": false,
+    "PasswordHash": null,
+    "SecurityStamp": "41deb2bd-9f8e-4a17-aa82-5f2e553370d0",
+    "ConcurrencyStamp": "22e4e4f8-982c-4cc7-bc90-a20fc8a138ab",
+    "PhoneNumber": null,
+    "PhoneNumberConfirmed": false,
+    "TwoFactorEnabled": false,
+    "LockoutEnd": null,
+    "LockoutEnabled": false,
+    "AccessFailedCount": 0
+  }
+
+]

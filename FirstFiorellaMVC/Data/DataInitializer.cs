@@ -26,42 +26,67 @@ namespace FirstFiorellaMVC.Data
         {
             await _dbContext.Database.MigrateAsync();
 
-            //await MyCreateRoleListFileAsync();
+            #region Default Rollarin json file-dan oxunmasi ve database-ne yazilmasi
 
-            var readedJson = File.ReadAllText(@$"{Constants.SeedDataPath}\MyDefaultRoles.json");
-            var JsonRoleList = JsonConvert.DeserializeObject<List<string>>(readedJson);
+            //await MyCreateDefaultRolesFileAsync(); // json file yaradilmasi
 
-            foreach (var role in JsonRoleList)
+            var roleJson = File.ReadAllText(@$"{Constants.SeedDataPath}\MyDefaultRoles.json");
+            var jsonRoles = JsonConvert.DeserializeObject<List<string>>(roleJson);
+
+            foreach (var role in jsonRoles)
             {
                 if (await _roleManager.RoleExistsAsync(role))
                     continue;
 
                 await _roleManager.CreateAsync(new IdentityRole(role));
             }
+            #endregion
 
+            #region Default Userlerin json file-dan oxunmasi ve database-ne yazilmasi
+
+            //await MyCreateDefaultUsersFileAsync(); // json file yaradilmasi
+
+            var userJson = File.ReadAllText(@$"{Constants.SeedDataPath}\MyDefaultUsers.json");
+            var jsonUsers = JsonConvert.DeserializeObject<List<User>>(userJson);
+
+            foreach (var user in jsonUsers)
+            {
+                if (await _userManager.FindByNameAsync(user.UserName) != null)
+                    continue;
+
+                await _userManager.CreateAsync(user, "Lhx-9.9-lhx");
+                await _userManager.AddToRoleAsync(user, RoleConstants.AdminRole);
+            }
+            #endregion
+        }
+
+        public async Task MyCreateDefaultRolesFileAsync()
+        {
+            var roles = new List<string>()
+            {
+                RoleConstants.AdminRole,
+                RoleConstants.ModeratorRole,
+                RoleConstants.UserRole
+            };
+
+            var roleJson = JsonConvert.SerializeObject(roles);
+            await File.WriteAllTextAsync(@$"{Constants.SeedDataPath}\MyDefaultRoles.json", roleJson);
+        }
+
+        public async Task MyCreateDefaultUsersFileAsync()
+        {
             var user = new User()
             {
                 FullName = "Admin",
                 UserName = "Admin",
+                Email = "admin@admin"
             };
 
-            if (_userManager.FindByNameAsync(user.UserName) != null)
-                return;
+            var users = new List<User> { user };
+            users.Add(user);
 
-            await _userManager.CreateAsync(user, "Admin@123");
+            var userJson = JsonConvert.SerializeObject(users);
+            await File.WriteAllTextAsync(@$"{Constants.SeedDataPath}\MyDefaultUsers.json", userJson);
         }
-
-        //public async Task MyCreateRoleListFileAsync()
-        //{
-        //    var roles = new List<string>()
-        //    {
-        //        RoleConstants.AdminRole,
-        //        RoleConstants.ModeratorRole,
-        //        RoleConstants.UserRole
-        //    };
-
-        //    var roleJson = JsonConvert.SerializeObject(roles);
-        //    await File.WriteAllTextAsync(@$"{Constants.SeedDataPath}\MyDefaultRoles.json", roleJson);
-        //}
     }
 }

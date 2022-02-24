@@ -2,6 +2,9 @@
 using FirstFiorellaMVC.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace FirstFiorellaMVC.Controllers
@@ -116,6 +119,50 @@ namespace FirstFiorellaMVC.Controllers
             await _signInManager.SignInAsync(user, false);
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult SendEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SendEmail(string receiver, string subject, string message)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var senderEmail = new MailAddress("heydarovnamiq@gmail.com", "Namik Heydarov");
+                    var receiverEmail = new MailAddress("namikah@code.edu.az", "Receiver");
+                    var password = "Nhl99nhl";
+                    var sub = "Test Message";
+                    var body = "Bu bir test message-dir";
+                    var smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(senderEmail.Address, password)
+                    };
+                    using (var mess = new MailMessage(senderEmail, receiverEmail)
+                    {
+                        Subject = sub,
+                        Body = body
+                    })
+                    {
+                        smtp.Send(mess);
+                    }
+                    return View();
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Some Error";
+            }
+            return View();
         }
     }
 }

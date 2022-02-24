@@ -90,17 +90,23 @@ namespace FirstFiorellaMVC.Controllers
                 UserName = loginViewModel.Username,
             };
 
-            //var result = await _signInManager.CheckPasswordSignInAsync(user, loginViewModel.Password, true);
-
+            //var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
             //if (!result.Succeeded)
             //{
             //    ModelState.AddModelError("Password", "Incorrect Password");
             //    return View(loginViewModel);
             //}
 
-            //var result2 = await _userManager.CheckPasswordAsync(user, loginViewModel.Password);
+            //var result = await _signInManager.CheckPasswordSignInAsync(user, loginViewModel.Password, false);
+            //if (!result.Succeeded)
+            //{
+            //    ModelState.AddModelError("Password", "Incorrect Password");
+            //    return View(loginViewModel);
+            //}
 
-            //if (!result2)
+            //var result = await _userManager.CheckPasswordAsync(user, loginViewModel.Password);
+
+            //if (!result)
             //{
             //    ModelState.AddModelError("Password", "Incorrect Password");
             //    return View(loginViewModel);

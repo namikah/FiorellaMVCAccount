@@ -34,7 +34,10 @@ namespace FirstFiorellaMVC
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
+                options.UseSqlServer(connectionString, builder =>
+                {
+                    builder.MigrationsAssembly(nameof(FirstFiorellaMVC));
+                });
             });
 
             services.AddIdentity<User, IdentityRole>(options =>
@@ -56,6 +59,7 @@ namespace FirstFiorellaMVC
             services.AddMvc().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             Constants.ImageFolderPath = Path.Combine(_environment.WebRootPath, "img");
+            Constants.SeedDataPath = Path.Combine(_environment.WebRootPath, "SeedData");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

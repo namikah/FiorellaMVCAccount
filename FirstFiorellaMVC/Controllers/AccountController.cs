@@ -120,61 +120,77 @@ namespace FirstFiorellaMVC.Controllers
                 return View();
             }
 
-            var isUsername =await _userManager.FindByNameAsync(resetViewModel.Username);
-            if(isUsername == null)
+            var isUser = await _userManager.FindByNameAsync(resetViewModel.Username);
+            if (isUser == null)
             {
                 ModelState.AddModelError("Username", "Username not found");
                 return View();
             }
 
-            ViewBag.ConfirmationMessageSend = "true";
+            var token = await _userManager.GeneratePasswordResetTokenAsync(isUser);
+
+            if (SendEmail(isUser.Email, "reset password", "https://localhost:44328/Account/ChangePassword/?token=" + token + "&username=" + isUser.UserName))
+            {
+                ViewBag.ConfirmationMessage = "Confirmation message was sent to your email. Please check your email to reset password.";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Couldn't send email.");
+            }
 
             return View();
         }
 
-        public ActionResult SendEmail()
+        public async Task<IActionResult> ChangePassword(string token, string username)
         {
+            var isUser =await _userManager.FindByNameAsync(username);
+            if(isUser == null)
+            {
+                return BadRequest();
+            }
+
+            var isToken = await _userManager.VerifyUserTokenAsync(isUser, TokenOptions.DefaultEmailProvider, "What is Want", token);
+            if (!isToken)
+            {
+                return BadRequest();
+            }
+            
             return View();
         }
 
-        [HttpPost]
-        public ActionResult SendEmail(string receiver, string subject, string message)
+        public bool SendEmail(string receiver, string subject, string message)
         {
             try
             {
-                if (ModelState.IsValid)
+                var senderEmail = new MailAddress("heydarovnamiq@gmail.com", "Namik Heydarov");
+                var receiverEmail = new MailAddress(receiver, "Receiver");
+                var password = "Nhl99nhl";
+                var sub = subject;
+                var body = message;
+                var smtp = new SmtpClient
                 {
-                    var senderEmail = new MailAddress("heydarovnamiq@gmail.com", "Namik Heydarov");
-                    var receiverEmail = new MailAddress(receiver, "Receiver");
-                    var password = "Nhl99nhl";
-                    var sub = subject;
-                    var body = message;
-                    var smtp = new SmtpClient
-                    {
-                        Host = "smtp.gmail.com",
-                        Port = 587,
-                        EnableSsl = true,
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-                        UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential(senderEmail.Address, password)
-                    };
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(senderEmail.Address, password)
+                };
 
-                    using (var mess = new MailMessage(senderEmail, receiverEmail)
-                    {
-                        Subject = sub,
-                        Body = body
-                    })
-                    {
-                        smtp.Send(mess);
-                    }
-                    return View();
+                using (var mess = new MailMessage(senderEmail, receiverEmail)
+                {
+                    Subject = sub,
+                    Body = body
+                })
+                {
+                    smtp.Send(mess);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                ViewBag.Error = ex.Message;
+                return false;
             }
-            return View();
+            return true;
         }
     }
 }

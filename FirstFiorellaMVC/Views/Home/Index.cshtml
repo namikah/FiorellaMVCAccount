@@ -17,6 +17,14 @@
  
 }
 
+@if (TempData["confirm"] != null)
+{
+    <input type="hidden" id="confirmJs" />
+}
+@if (TempData["confirmed"] != null)
+{
+    <input type="hidden" id="confirmedJs" />
+}
 
 <!-- SLIDER START -->
 
@@ -257,4 +265,58 @@
 </section>
 
 <!-- INSTAGRAM END -->
+
+
+@section Scriptss{
+    <script>
+        $(document).ready(function () {
+            if ($("#confirmJs").length) {
+
+                Command: toastr["success"]("please verify account by email")
+
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+            }
+            if ($("#confirmedJs").length) {
+
+                Command: toastr["success"]("email confirmed successfully")
+
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+            }
+        })
+
+    </script>
+}
+
 

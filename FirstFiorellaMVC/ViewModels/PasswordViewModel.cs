@@ -2,7 +2,7 @@
 
 namespace FirstFiorellaMVC.ViewModels
 {
-    public class ChangePassViewModel
+    public class PasswordViewModel
     {
         [Required, DataType(DataType.Password)]
         public string Password { get; set; }

@@ -127,7 +127,7 @@ namespace FirstFiorellaMVC.Controllers
                 return View(loginViewModel);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(isExistUser, loginViewModel.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(isExistUser, loginViewModel.Password, loginViewModel.RememberMe, false);
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Incorrect");
@@ -198,33 +198,33 @@ namespace FirstFiorellaMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> VerifyReset(string email, string token, ChangePassViewModel changePassViewModel)
+        public async Task<IActionResult> VerifyReset(string email, string token, PasswordViewModel passwordViewModel)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    ModelState.AddModelError("", "Incorrect Password");
-            //    return View(registerViewModel);
-            //}
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Incorrect");
+                return View(passwordViewModel);
+            }
 
             var isExistUser = await _userManager.FindByEmailAsync(email);
             if (isExistUser == null)
             {
-                ModelState.AddModelError("", "Email Not Found");
-                return View(changePassViewModel);
+                ModelState.AddModelError("", "Not Found");
+                return View(passwordViewModel);
             }
 
-            var result = await _userManager.ResetPasswordAsync(isExistUser, token, changePassViewModel.Password);
+            var result = await _userManager.ResetPasswordAsync(isExistUser, token, passwordViewModel.Password);
 
             if (!result.Succeeded)
             {
                 foreach (var item in result.Errors)
                 {
-                    ModelState.AddModelError("", item.Description + " old token " + token + " new pass " + changePassViewModel.Password);
+                    ModelState.AddModelError("", item.Description + " old token " + token + " new pass " + passwordViewModel.Password);
                 }
-                return View(changePassViewModel);
+                return View(passwordViewModel);
             }
 
-            await _signInManager.SignInAsync(isExistUser, true);
+            await _signInManager.SignInAsync(isExistUser, isExistUser.EmailConfirmed);
 
             return RedirectToAction("Index", "Home");
         }

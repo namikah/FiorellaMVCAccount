@@ -1,5 +1,7 @@
-﻿using FirstFiorellaMVC.DataAccessLayer;
+﻿using FirstFiorellaMVC.Data;
+using FirstFiorellaMVC.DataAccessLayer;
 using FirstFiorellaMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -8,6 +10,7 @@ using System.Threading.Tasks;
 namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = RoleConstants.AdminRole)]
     public class ProductController : Controller
     {
         private readonly AppDbContext _dbContext;
@@ -17,6 +20,7 @@ namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
             _dbContext = dbContext;
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1)
         {
             ViewBag.ProductCounts = await _dbContext.Products.CountAsync();
@@ -27,6 +31,7 @@ namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
             return View(products);
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Detail(int? id)
         {
             if (id == null)

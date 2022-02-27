@@ -1,5 +1,7 @@
-﻿using FirstFiorellaMVC.DataAccessLayer;
+﻿using FirstFiorellaMVC.Data;
+using FirstFiorellaMVC.DataAccessLayer;
 using FirstFiorellaMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = RoleConstants.AdminRole)]
     public class ExpertController : Controller
     {
         private readonly AppDbContext _dbContext;
@@ -24,6 +27,7 @@ namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1)
         {
             ViewBag.Counts = await _dbContext.Experts.CountAsync();

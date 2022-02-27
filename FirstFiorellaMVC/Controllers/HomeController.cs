@@ -117,7 +117,7 @@ namespace FirstFiorellaMVC.Controllers
         public async Task<IActionResult> Basket(int? id)
         {
             if(id == null)
-                return BadRequest();
+                return RedirectToAction(nameof(Index), "Error", BadRequest());
 
             var product = await _appDbContext.Products.Include(x=>x.Images).Include(x=>x.Campaign).FirstOrDefaultAsync(x=>x.Id == id);
             var image = await _appDbContext.ProductImages.FirstOrDefaultAsync(x => x.ProductId == id && x.IsMain == true);
@@ -125,7 +125,7 @@ namespace FirstFiorellaMVC.Controllers
             double campaignPrice = product.Price;
 
             if (product == null)
-                return NotFound();
+                return RedirectToAction(nameof(Index), "Error", NotFound());
 
             if (campaign != null)
             {
@@ -176,12 +176,12 @@ namespace FirstFiorellaMVC.Controllers
         public async Task<IActionResult> RemoveBasket(int? id)
         {
             if (id == null)
-                return BadRequest();
+                return RedirectToAction(nameof(Index), "Error", BadRequest());
 
             var product = await _appDbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
-                return NotFound();
+                return RedirectToAction(nameof(Index), "Error", NotFound());
 
             List<BasketViewModel> basketViewModels;
             var cookieBasket = Request.Cookies["Basket"];
@@ -215,12 +215,12 @@ namespace FirstFiorellaMVC.Controllers
         public async Task<IActionResult> IncDecBasket(int? id, string operation)
         {
             if (id == null)
-                return BadRequest();
+                return RedirectToAction(nameof(Index), "Error", BadRequest());
 
             var product = await _appDbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
-                return NotFound();
+                return RedirectToAction(nameof(Index), "Error", NotFound());
 
             List<BasketViewModel> basketViewModels;
             var cookieBasket = Request.Cookies["Basket"];

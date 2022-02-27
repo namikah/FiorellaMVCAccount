@@ -32,7 +32,7 @@ namespace FirstFiorellaMVC.Controllers
         { 
             if (skip >= _productsCount)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Index), "Error", BadRequest());
             }
 
             var products = await _appDbContext.Products.Include(x => x.Category).Include(x=>x.Images).Skip(skip).Take(8).ToListAsync();

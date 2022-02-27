@@ -2,6 +2,7 @@
 using FirstFiorellaMVC.Data;
 using FirstFiorellaMVC.DataAccessLayer;
 using FirstFiorellaMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = RoleConstants.AdminRole)]
     public class SliderImageController : Controller
     {
         private readonly AppDbContext _dbContext;
@@ -25,7 +27,7 @@ namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
             _environment = environment;
         }
 
-
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             ViewBag.ImageMaxCount = SliderImageSetting.ImageMaxCount;
@@ -34,12 +36,10 @@ namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
             return View(sliderImages);
         }
 
-
         public IActionResult Create()
         {
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -79,7 +79,6 @@ namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
             return RedirectToAction("Index");
         }
 
-
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,7 +90,6 @@ namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
 
             return View(sliderImage);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -135,7 +133,6 @@ namespace FirstFiorellaMVC.Areas.AdminPanel.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
 
         public async Task<IActionResult> Delete(int? id)
         {

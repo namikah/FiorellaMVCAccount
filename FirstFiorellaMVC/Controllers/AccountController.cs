@@ -87,7 +87,7 @@ namespace FirstFiorellaMVC.Controllers
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                return BadRequest();
+                return RedirectToAction(nameof(Index), "Error", BadRequest());
 
             await _userManager.ConfirmEmailAsync(user, token);
             await _signInManager.SignInAsync(user, user.EmailConfirmed);
@@ -178,13 +178,18 @@ namespace FirstFiorellaMVC.Controllers
         public async Task<IActionResult> VerifyReset(string id, string token)
         {
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(id))
-                return BadRequest();
+                return RedirectToAction(nameof(Index),"Error", BadRequest());
 
             var isUser = await _userManager.FindByIdAsync(id);
             if (isUser == null)
-                return BadRequest();
+                return RedirectToAction(nameof(Index), "Error", BadRequest());
 
-            await _userManager.ConfirmEmailAsync(isUser, token);
+            var result = await _userManager.ConfirmEmailAsync(isUser, token);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "id or token incorrect");
+                return View();
+            }
 
             return View();
         }

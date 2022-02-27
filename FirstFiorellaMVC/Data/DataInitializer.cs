@@ -69,8 +69,7 @@ namespace FirstFiorellaMVC.Data
                 RoleConstants.UserRole
             };
 
-            var roleJson = JsonConvert.SerializeObject(roles);
-            await File.WriteAllTextAsync(@$"{Constants.SeedDataPath}\MyDefaultRoles.json", roleJson);
+            await Util<string>.MyCreateFileAsync(roles, Constants.SeedDataPath, "MyDefaultRoles.json");
         }
 
         public async Task MyCreateDefaultUsersFileAsync()
@@ -82,11 +81,10 @@ namespace FirstFiorellaMVC.Data
                 Email = "admin@admin"
             };
 
-            var users = new List<User> { user };
+            var users = new List<User>();
             users.Add(user);
 
-            var userJson = JsonConvert.SerializeObject(users);
-            await File.WriteAllTextAsync(@$"{Constants.SeedDataPath}\MyDefaultUsers.json", userJson);
+            await Util<User>.MyCreateFileAsync(users, Constants.SeedDataPath, "MyDefaultUsers.json");
         }
     }
 }

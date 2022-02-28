@@ -166,14 +166,10 @@ namespace FirstFiorellaMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> VerifyReset(string id, string token)
+        public IActionResult VerifyReset(string id, string token)
         {
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(id))
                 return RedirectToAction(nameof(Index), "Error", BadRequest());
-
-            var isUser = await _userManager.FindByIdAsync(id);
-            if (isUser == null)
-                return RedirectToAction(nameof(Index), "Error", NotFound());
 
             return View();
         }
@@ -190,10 +186,7 @@ namespace FirstFiorellaMVC.Controllers
 
             var isExistUser = await _userManager.FindByIdAsync(id);
             if (isExistUser == null)
-            {
-                ModelState.AddModelError("", "Not Found");
-                return View(passwordViewModel);
-            }
+                return RedirectToAction(nameof(Index), "Error", NotFound());
 
             var result = await _userManager.ResetPasswordAsync(isExistUser, token, passwordViewModel.Password);
             if (!result.Succeeded)

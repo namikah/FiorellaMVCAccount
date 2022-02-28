@@ -171,6 +171,10 @@ namespace FirstFiorellaMVC.Controllers
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(id))
                 return RedirectToAction(nameof(Index), "Error", BadRequest());
 
+            var isUser = await _userManager.FindByIdAsync(id);
+            if (isUser == null)
+                return RedirectToAction(nameof(Index), "Error", NotFound());
+
             return View();
         }
 

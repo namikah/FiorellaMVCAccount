@@ -54,7 +54,7 @@ namespace FirstFiorellaMVC.Data
                 if (await _userManager.FindByNameAsync(user.UserName) != null)
                     continue;
 
-                await _userManager.CreateAsync(user, "Lhx-9.9-lhx");
+                await _userManager.CreateAsync(user, "Admin.123");
                 await _userManager.AddToRoleAsync(user, RoleConstants.AdminRole);
             }
             #endregion
@@ -69,7 +69,7 @@ namespace FirstFiorellaMVC.Data
                 RoleConstants.UserRole
             };
 
-            await Util<string>.MyCreateFileAsync(roles, Constants.SeedDataPath, "MyDefaultRoles.json");
+            await MyFileUtil<string>.MyCreateFileAsync(roles, Constants.SeedDataPath, "MyDefaultRoles.json");
         }
 
         public async Task MyCreateDefaultUsersFileAsync()
@@ -84,7 +84,7 @@ namespace FirstFiorellaMVC.Data
             var users = new List<User>();
             users.Add(user);
 
-            await Util<User>.MyCreateFileAsync(users, Constants.SeedDataPath, "MyDefaultUsers.json");
+            await MyFileUtil<User>.MyCreateFileAsync(users, Constants.SeedDataPath, "MyDefaultUsers.json");
         }
     }
 }

@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 
 namespace FirstFiorellaMVC.Data
 {
-    public static class Util<T>
+    public static class MyFileUtil<T>
     {
-        public static async Task MyCreateFileAsync(List<T> Tlist, string pathAddress, string fileName)
+        public static async Task MyCreateFileAsync(List<T> TList, string pathAddress, string fileName)
         {
-            var Json = JsonConvert.SerializeObject(Tlist);
+            var Json = JsonConvert.SerializeObject(TList);
             await File.WriteAllTextAsync(@$"{pathAddress}\{fileName}", Json);
         }
 
-        public static async Task MyCreateFileAsync(T Tobject, string pathAddress, string fileName)
+        public static async Task MyCreateFileAsync(T TObject, string pathAddress, string fileName)
         {
-            var Json = JsonConvert.SerializeObject(Tobject);
+            var Json = JsonConvert.SerializeObject(TObject);
             await File.WriteAllTextAsync(@$"{pathAddress}\{fileName}", Json);
         }
 

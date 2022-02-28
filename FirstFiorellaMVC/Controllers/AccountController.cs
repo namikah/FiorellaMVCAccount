@@ -23,13 +23,10 @@ namespace FirstFiorellaMVC.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-
-
         public IActionResult Register()
         {
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -69,7 +66,7 @@ namespace FirstFiorellaMVC.Controllers
 
             string link = Url.Action(nameof(VerifyRegister), "Account", new { email = user.Email, token }, Request.Scheme, Request.Host.ToString());
 
-            if (SendEmail(user, link))
+            if (MyEmailUtil.SendEmail(user, link))
             {
                 TempData["confirm"] = true;
             }
@@ -82,7 +79,6 @@ namespace FirstFiorellaMVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
         public async Task<IActionResult> VerifyRegister(string email, string token)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -90,19 +86,16 @@ namespace FirstFiorellaMVC.Controllers
                 return RedirectToAction(nameof(Index), "Error", BadRequest());
 
             await _userManager.ConfirmEmailAsync(user, token);
-            await _signInManager.SignInAsync(user, user.EmailConfirmed);
+            await _signInManager.SignInAsync(user, false);
 
             TempData["confirmed"] = true;
 
             return RedirectToAction(nameof(Index), "Home");
         }
-
-
         public IActionResult Login()
         {
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -128,14 +121,12 @@ namespace FirstFiorellaMVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
         }
-
 
         public IActionResult ResetPassword()
         {
@@ -160,16 +151,16 @@ namespace FirstFiorellaMVC.Controllers
 
             string link = Url.Action(nameof(VerifyReset), "Account", new { id = isUser.Id, token }, Request.Scheme, Request.Host.ToString());
 
-            //token and user
+            //token link write and read from json file
             try
             {
-                await TokenSaver(link);
-                var url = Util<string>.MyReadFile(Constants.SeedDataPath, "VerifyToken.json");
+                await MyFileUtil<string>.MyCreateFileAsync(link, Constants.SeedDataPath, "VerifyToken.json");
+                var url = MyFileUtil<string>.MyReadFile(Constants.SeedDataPath, "VerifyToken.json");
                 ViewBag.ConfirmationUrl = url;
             }
             catch
             {
-                ModelState.AddModelError("", "Couldn't send email.");
+                ModelState.AddModelError("", "id or token unreachable.");
             }
 
             return View();
@@ -178,17 +169,20 @@ namespace FirstFiorellaMVC.Controllers
         public async Task<IActionResult> VerifyReset(string id, string token)
         {
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(id))
-                return RedirectToAction(nameof(Index),"Error", BadRequest());
+                return RedirectToAction(nameof(Index), "Error", BadRequest());
 
             var isUser = await _userManager.FindByIdAsync(id);
             if (isUser == null)
-                return RedirectToAction(nameof(Index), "Error", BadRequest());
+                return RedirectToAction(nameof(Index), "Error", NotFound());
 
             var result = await _userManager.ConfirmEmailAsync(isUser, token);
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", "id or token incorrect");
-                return View();
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError("", item.Description);
+                }
+                return RedirectToAction(nameof(Index), "Error", BadRequest());
             }
 
             return View();
@@ -212,7 +206,6 @@ namespace FirstFiorellaMVC.Controllers
             }
 
             var result = await _userManager.ResetPasswordAsync(isExistUser, token, passwordViewModel.Password);
-
             if (!result.Succeeded)
             {
                 foreach (var item in result.Errors)
@@ -225,44 +218,6 @@ namespace FirstFiorellaMVC.Controllers
             await _signInManager.SignInAsync(isExistUser, isExistUser.EmailConfirmed);
 
             return RedirectToAction("Index", "Home");
-        }
-
-        public bool SendEmail(User user, string link)
-        {
-            try
-            {
-                MailMessage msg = new MailMessage();
-                msg.From = new MailAddress("codep320@gmail.com", "Fiorello");
-                msg.To.Add(user.Email);
-                string body = string.Empty;
-                using (StreamReader reader = new StreamReader("wwwroot/template/verifyemail.html"))
-                {
-                    body = reader.ReadToEnd();
-                }
-                body = body.Replace("{{link}}", link);
-                body = body.Replace("{{name}}", $"Welcome, {user.UserName.ToUpper()}");
-                msg.Body = body;
-                msg.Subject = "Verify";
-                msg.IsBodyHtml = true;
-
-                SmtpClient smtp = new SmtpClient();
-                smtp.Host = "smtp.gmail.com";
-                smtp.Port = 587;
-                smtp.EnableSsl = true;
-                smtp.Credentials = new NetworkCredential("codep320@gmail.com", "codeacademyp320");
-                smtp.Send(msg);
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public async Task TokenSaver(string link)
-        {
-            await Util<string>.MyCreateFileAsync(link, Constants.SeedDataPath, "VerifyToken.json");
         }
     }
 }

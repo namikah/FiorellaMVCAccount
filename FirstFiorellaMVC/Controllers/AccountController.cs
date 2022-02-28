@@ -171,20 +171,6 @@ namespace FirstFiorellaMVC.Controllers
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(id))
                 return RedirectToAction(nameof(Index), "Error", BadRequest());
 
-            var isUser = await _userManager.FindByIdAsync(id);
-            if (isUser == null)
-                return RedirectToAction(nameof(Index), "Error", NotFound());
-
-            var result = await _userManager.ConfirmEmailAsync(isUser, token);
-            if (!result.Succeeded)
-            {
-                foreach (var item in result.Errors)
-                {
-                    ModelState.AddModelError("", item.Description);
-                }
-                return RedirectToAction(nameof(Index), "Error", BadRequest());
-            }
-
             return View();
         }
 
@@ -215,9 +201,7 @@ namespace FirstFiorellaMVC.Controllers
                 return View(passwordViewModel);
             }
 
-            await _signInManager.SignInAsync(isExistUser, isExistUser.EmailConfirmed);
-
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(Login));
         }
     }
 }
